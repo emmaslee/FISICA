@@ -5,32 +5,21 @@ color brown  = color(166, 120, 24);
 color green  = color(74, 163, 57);
 color red    = color(224, 80, 61);
 color yellow = color(242, 215, 16);
-
-//Mouse & Keyboard interaction variables
-boolean mouseReleased;
-boolean wasPressed;
-int x;
-
-//Buttons
-Button gravity;
-
 //assets
 PImage redBird;
 //fisica
 FWorld world;
-
 void setup() {
   //make window
   fullScreen();
-  //gravity button
-  gravity = new Button("GRAVITY", 900, 100, 150, 100, 0, 255);
+  
   //load resources
   redBird = loadImage("red-bird.png");
   //initialize world
   makeWorld();
   //add terrain to world
   makeTopPlatform();
-  //makeBottomPlatform();
+  makeBottomPlatform();
 }
 //=====================================================================================================================================
 void makeWorld() {
@@ -42,17 +31,10 @@ void makeWorld() {
 void makeTopPlatform() {
   FPoly p = new FPoly();
   //plot the vertices of this platform
-  p.vertex(100, 500);
-  p.vertex(100, 800);
-  p.vertex(1300, 800);
-  p.vertex(1300, 500);
-  p.vertex(1200, 500);
-  p.vertex(1200, 700);
-  p.vertex(200, 700);
-  p.vertex(200, 500);
-  //p.vertex(1300, 600);
-
-
+  p.vertex(-100, height*.1);
+  p.vertex(width*0.8, height*0.4);
+  p.vertex(width*0.8, height*0.4+100);
+  p.vertex(-100, height*0.1+100);
   // define properties
   p.setStatic(true);
   p.setFillColor(brown);
@@ -61,20 +43,20 @@ void makeTopPlatform() {
   world.add(p);
 }
 //=====================================================================================================================================
-//void makeBottomPlatform() {
-//  FPoly p = new FPoly();
-//  //plot the vertices of this platform
-//  p.vertex(width+100, height*0.6);
-//  p.vertex(300, height*0.8);
-//  p.vertex(300, height*0.8+100);
-//  p.vertex(width+100, height*0.6+100);
-//  // define properties
-//  p.setStatic(true);
-//  p.setFillColor(brown);
-//  p.setFriction(0);
-//  //put it in the world
-//  world.add(p);
-//}
+void makeBottomPlatform() {
+  FPoly p = new FPoly();
+  //plot the vertices of this platform
+  p.vertex(width+100, height*0.6);
+  p.vertex(300, height*0.8);
+  p.vertex(300, height*0.8+100);
+  p.vertex(width+100, height*0.6+100);
+  // define properties
+  p.setStatic(true);
+  p.setFillColor(brown);
+  p.setFriction(0);
+  //put it in the world
+  world.add(p);
+}
 
 //=====================================================================================================================================
 void draw() {
@@ -86,38 +68,9 @@ void draw() {
     makeBox();
     makeBird();
   }
-  clouds();
-  gravity.show();
   world.step();  //get box2D to calculate all the forces and new positions
   world.draw();  //ask box2D to convert this world to processing screen coordinates and draw
 }
-//=====================================================================================================================================
-
-void clouds() {
-  fill(255);
-  stroke(255);
-  circle(x, 800, 200);
-  circle(x+100, 800, 200);
-  circle(x-100, 800, 200);
-  circle(x, 700, 200);
-
-  x = x+3;
-
-
-  fill(255);
-  stroke(255);
-  circle(x, 250, 100);
-  circle(x+50, 300, 100);
-  circle(x-50, 300, 100);
-  circle(x, 300, 100);
-
-  x = x+3;
-
-  if (x > 1600) {
-    x = -100;
-  }
-}
-
 
 //=====================================================================================================================================
 void makeCircle() {
@@ -175,8 +128,3 @@ void makeBird() {
   bird.setRestitution(0.5);
   world.add(bird);
 }
-//=====================================================================================================================================
-
-
-
-//=====================================================================================================================================
