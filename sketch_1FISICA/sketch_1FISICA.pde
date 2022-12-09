@@ -13,6 +13,9 @@ int x;
 
 //Buttons
 Button gravity;
+boolean g = false;
+boolean b = false;
+Button newBodies;
 
 //assets
 PImage redBird;
@@ -20,10 +23,12 @@ PImage redBird;
 FWorld world;
 
 void setup() {
+  rectMode(CENTER);
   //make window
   fullScreen();
   //gravity button
-  gravity = new Button("GRAVITY", 900, 100, 150, 100, 0, 255);
+  gravity = new Button("GRAVITY", 100, 100, 150, 100, 255, 0);
+  newBodies = new Button("NEWBODIES", 100, 300, 150, 100, 255, 0);
   //load resources
   redBird = loadImage("red-bird.png");
   //initialize world
@@ -78,18 +83,34 @@ void makeTopPlatform() {
 
 //=====================================================================================================================================
 void draw() {
+  click();
   println("x: " + mouseX + " y: " + mouseY);
   background(blue);
-  if (frameCount % 20 == 0) {  //Every 20 frames ...
-    makeCircle();
-    makeBlob();
-    makeBox();
-    makeBird();
+  if (newBodies.clicked) {
+    b =! b;
+  }
+  if (b == false) {
+    if (frameCount % 20 == 0) {  //Every 20 frames ...
+      makeCircle();
+      makeBlob();
+      makeBox();
+      makeBird();
+    }
   }
   clouds();
   gravity.show();
+  newBodies.show();
+
+  if (gravity.clicked) g =! g;
+  if (g == true)   world.setGravity(0, 900);
+  if (g == false)   world.setGravity(0, 0);
+
+
+
+
   world.step();  //get box2D to calculate all the forces and new positions
   world.draw();  //ask box2D to convert this world to processing screen coordinates and draw
+  clouds2();
 }
 //=====================================================================================================================================
 
@@ -102,7 +123,14 @@ void clouds() {
   circle(x, 700, 200);
 
   x = x+3;
+  if (x > 1600) {
+    x = -100;
+  }
+}
 
+//=====================================================================================================================================
+
+ void clouds2() {
 
   fill(255);
   stroke(255);
@@ -160,7 +188,7 @@ void makeBox() {
   //set physical properties
   box.setDensity(0.2);
   box.setFriction(1);
-  box.setRestitution(0.25);
+  box.setRestitution(1);
   world.add(box);
 }
 //=====================================================================================================================================
